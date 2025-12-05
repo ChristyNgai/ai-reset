@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   try {
     // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
     // ⚠️ 请在这里填入你的 API Key (保留双引号)
-    const apiKey = "AIza..."; 
+    const apiKey = "AIzaSyASVpEOWE2WtNM42IkbGuQshkyqXYiCGBI"; 
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -49,3 +49,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: error.message || "未知错误" });
   }
 }
+
