@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 助手最终版</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: sans-serif; background: #f0f2f5; height: 100vh; display: flex; flex-direction: column; }
+        header { background: white; padding: 15px; text-align: center; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; word-wrap: break-word; }
+        .user-message { align-self: flex-end; background: #0084ff; color: white; border-bottom-right-radius: 2px; }
+        .ai-message { align-self: flex-start; background: white; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,0.1); border-bottom-left-radius: 2px; }
+        .input-area { background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #ddd; }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        button { padding: 10px 20px; background: #0084ff; color: white; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>✨ AI 助手 (重制版)</header>
+    <div id="chat-container"><div class="message ai-message">你好！我是全新的 AI，请问我吧！</div></div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="输入问题...">
+        <button onclick="sendMessage()">发送</button>
+    </div>
+    <script>
+        const chatBox = document.getElementById('chat-container');
+        const input = document.getElementById('userInput');
+
+        function addMsg(text, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}-message`;
+            div.innerText = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = input.value.trim();
+            if (!text) return;
+            addMsg(text, 'user');
+            input.value = '';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: text })
+                });
+                const data = await res.json();
+                if (data.error) addMsg("错误: " + data.error, 'ai');
+                else addMsg(data.text, 'ai');
+            } catch (e) {
+                addMsg("通信失败，请检查网络", 'ai');
+            }
+        }
+    </script>
+</body>
+</html>
